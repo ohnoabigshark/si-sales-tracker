@@ -1,0 +1,185 @@
+  <!DOCTYPE html>
+  <html>
+  <head>
+    <meta charset="utf-8">
+    <title>SWEET IDEA ORDER</title>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.3.3/underscore-min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.2/backbone-min.js"></script>
+    <script>
+
+
+
+	function init ( ) { 
+		var Type = Backbone.Model.extend({
+
+		    idAttribute: "uid",
+		    url: "/sweetorder/Type.php",
+		    //blacklist:
+
+		    getModifiableAttributes: function ( ) {
+		    	if(!_.isEmpty(this.blacklist)) {
+		    		return _.map(this.toJSON(), function (value,key) { if(!_.include(this.blacklist,key)) return key; }, this);
+		    	}
+		    	return this.toJSON();
+		    }
+
+		});
+
+		var FormElement = Backbone.Model.extend({
+		    defaults: {
+		        disabled: false,//true false,
+		        displayName: "Default",//displayName
+		        columnName: "default",//uid, name, abbreviation
+		        type: "text"//textarea, select, text
+		    }
+
+
+		});
+
+		var TypeCollection = Backbone.Collection.extend({
+			model: Type,
+			url: '/Type.php'
+		});
+
+		var FormElementCollection = Backbone.Collection.extend({ 
+		    model: FormElement
+		});
+
+		var TextFormElementView = Backbone.View.extend({
+			className: "formElement",
+			template: _.template("<div><%- displayName %></div><input type='text' id='<%- columnName %>' <% if(disabled) { %> disabled <% } %>>"),
+		    
+		    render: function ( ) {
+		        $(this.el).html(this.template(this.model.toJSON()));
+		        return this;
+		    },
+
+		    value: function ( ) {
+		        return this.$('#'+this.model.get("columnName")).val();
+		    }
+		});
+
+		var TextareaFormElementView = Backbone.View.extend({
+		    
+		    render: function ( ) {
+		        var html = "<div>"+this.model.get('displayName')+"</div><textarea id='"+this.model.get('columnName')+"'></textarea>";
+		        $(this.el).html(html);
+		        return this;
+		    }
+		});
+
+		/*var SelectFormElementView = Backbone.View.extend({
+		    
+		    render: function ( ) {
+		        var html = "<div>"+this.model.displayName+"</div><select id="+this.model.columnName+"></select>";
+		        $(this.el).html(html);
+		        return this;
+		    },
+
+		    value: function ( ) {
+		        return this.$('#'+this.model.columnName).value();
+		    }
+		});
+
+
+		var OptionFormElementView = Backbone.View.extend({
+
+		    render: function ( ) {
+		        var value = this.model[this.model.columnName];
+		        var html = "<option value="+value+">"+value+"</option>";
+		        $(this.el).html(html);
+		        return this;
+		    }
+
+		});*/
+
+
+
+		var FormView = Backbone.View.extend({
+			el: $("#main"),
+
+			views: [],
+
+			formElements: null,
+
+			events: {
+				"click #formSubmit": "submit"
+			},
+
+			initialize: function () {
+				this.views = [];
+				this.formElements = new FormElementCollection();
+				this.formElements.add(new FormElement({displayName:"UID",columnName:"uid",type:"text",disabled:true}));
+				this.formElements.add(new FormElement({displayName:"Name",columnName:"type",type:"text",disabled:false}));
+				this.formElements.each(this.addFormElement,this);
+			},
+
+			render: function ( ) {
+				for( view in this.views ) {
+					$(this.el).append(this.views[view].render().el);
+				}
+				this.$el.append("<input id='formSubmit' type='button' value='SUBMIT'>");
+				return this;
+			},
+
+			addFormElement: function ( formEl ) {
+				var view = new TextFormElementView({model: formEl});
+				this.views.push(view);
+			},
+
+			submit: function ( ) {
+				var data = {}; 
+				for( view in this.views ) {
+					view = this.views[view];
+					data[view.model.get("columnName")] = view.value();
+				}
+				this.model.save(data);
+			}
+
+		});
+
+		var CommandRouter = Backbone.Router.extend({
+		    
+		    routes: {
+		        "":"home",
+		        "type/":"showType",
+		        "type/:uid":"showType",
+		        "api/:model/:uid":"getModel"
+		    },
+
+		    initialize: function () {
+		        
+		    },
+
+		    home: function ( ) {
+		        $("#main").html("work!");
+		    },
+
+		    showType: function ( uid ) {
+		    	var view = new FormView({model: new Type} ); //takes a model
+		    	view.render();
+		    },
+		    getModel: function ( model, uid ) {
+		    	//var m = models.getModel(model);
+		    	//m.set
+		    }
+		});
+
+
+		var ApplicationRouter = new CommandRouter();
+		Backbone.history.start();
+	}
+	</script>
+
+
+  </head>
+  <body onload="init();">
+
+
+    
+<div id="main"></div>
+
+  </body>
+  </html>

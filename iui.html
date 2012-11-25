@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <title>Page Title</title>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.3.3/underscore-min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.2/backbone-min.js"></script>
+    <script src="./js/backbone.js"></script>
+    <script src="./js/views/ModelViews.js"></script>
+    <script src="./js/views/FormSelectView.js"></script>
+    <script src="./js/views/Viewport.js"></script>
+    <script src="./js/models/Type.js"></script>
+    <script src="./js/views/Type.js"></script>
+    <script src="./js/models/Route.js"></script>
+    <script src="./js/views/Route.js"></script>
+    <script src="./js/models/User.js"></script>
+    <script src="./js/views/User.js"></script>
+    <script src="./js/models/Chat.js"></script>
+    <script src="./js/views/Chat.js"></script>
+    <script src="./js/models/Text.js"></script>
+    <script src="./js/views/Text.js"></script>
+    <script src="./js/models/Menu.js"></script>
+    <script src="./js/views/Menu.js"></script>
+    <script src="./js/views/Order.js"></script>
+    <script src="./js/models/Order.js"></script>
+    <script src="./js/models/Zone.js"></script>  
+    <script src="./js/models/OrderProduct.js"></script>
+    <script src="./js/models/Product.js"></script>
+    <script src="./js/models/SalesItem.js"></script>
+    <script src="./js/CommandRouter.js"></script>
+   <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+   <meta name="apple-mobile-web-app-capable" content="yes" />
+   <link rel="stylesheet" href="iui/web-app/iui/iui.css" type="text/css" />
+   <link rel="stylesheet" href="iui/web-app/iui/t/default/default-theme.css" type="text/css"/>
+<link href="./css/styles.css" rel="stylesheet">
+   <script type="application/x-javascript" src="iui/web-app/iui/iui.js"></script>
+
+   <script>
+    //4135824805
+    	function init () {
+			window.App = new Viewport();
+    		App.render();
+			Backbone.emulateJSON = true; 
+			Backbone.emulateHTTP = true;
+			Backbone.history.start();
+    	}
+
+    </script>
+</head>
+
+<body onload="init();">
+
+
+	<div id="viewport" selected="true" title="Sweet Idea"> 
+	
+	</div>
+
+</body>
+</html> 
